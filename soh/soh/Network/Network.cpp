@@ -157,5 +157,11 @@ void Network::HandleRemoteJson(std::string payload) {
         return;
     }
 
-    OnIncomingJson(jsonPayload);
+    // An exception escaping the receive thread terminates the whole game, so unexpected
+    // payload shapes (e.g. a wrong-typed field) must not propagate past this point
+    try {
+        OnIncomingJson(jsonPayload);
+    } catch (const std::exception& e) {
+        SPDLOG_ERROR("[Network] Failed to handle json: \n{}\n{}\n", payload, e.what());
+    }
 }

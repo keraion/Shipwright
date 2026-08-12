@@ -121,11 +121,11 @@ void Anchor::ProcessIncomingPacketQueue() {
         nlohmann::json payload = packetsToProcess.front();
         packetsToProcess.pop();
 
-        std::string packetType = payload["type"].get<std::string>();
-
         isProcessingIncomingPacket = true;
 
         try {
+            std::string packetType = payload["type"].get<std::string>();
+
             // packetType here is a string so we can't use a switch statement
             if (packetType == ALL_CLIENT_STATE)
                 HandlePacket_AllClientState(payload);
